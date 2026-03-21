@@ -27,3 +27,7 @@ is limited to one u16 (2 bytes) via short reports only.
 - Logitech MX Vertical connected via Unifying receiver
 - Logi Options+ must not be running (it holds the HID++ interface)
 - `brew install hidapi`
+
+## Would be cool
+
+- Resolve HID++ feature index automatically so you can use this on every Logitech mouse? Idk about this
