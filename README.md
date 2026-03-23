@@ -1,6 +1,6 @@
 # mouse-fs
 
-Abuses a Logitech mouse's DPI register to store 2 bytes, but just temporarily.
+Abuses a Logitech mouse's DPI register to store 2 bytes of data. As long as the mouse stays powered.
 
 ## Usage
 
@@ -17,7 +17,15 @@ Unifying receiver.
 By enumerating the device's feature table, we can locate the AdjustableDPI feature (`0x2201`).
 It accepts arbitrary `u16` values without validation, which allows encoding 2 bytes of data into the DPI value.
 
-However:
+## Persistence behavior:
+
+The stored value behaves like this:
+
+- survives switching computers while the mouse stays powered
+- survives unplugging/replugging the receiver
+- is lost when the mouse loses power (power off or battery removal)
+
+## Important details:
 
 - Writing DPI only affects the active DPI
 - The device also maintains a fallback/default DPI
@@ -37,3 +45,4 @@ is limited to one u16 (2 bytes) via short reports only.
 ## Would be cool
 
 - ~~Resolve HID++ feature index automatically so you can use this on every Logitech mouse? Idk about this~~
+- Look where fallback DPI is actually stored
