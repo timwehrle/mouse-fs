@@ -1,9 +1,6 @@
 # mouse-fs
 
-Stores 2 bytes of arbitrary data in a Logitech mouse's DPI register.
-
-The mouse persists the DPI value in flash across power cycles and reconnections,
-making it 2 bytes of cross-computer storage that lives in your mouse.
+Abuses a Logitech mouse's DPI register to store 2 bytes, but just temporarily.
 
 ## Usage
 
@@ -15,9 +12,18 @@ making it 2 bytes of cross-computer storage that lives in your mouse.
 ## How it works
 
 A Logitech mouse communicates via the HID++ 2.0 protocol over a
-Unifying receiver. By enumerating the device's feature table we found that
-the AdjustableDPI feature (0x2201) accepts arbitrary u16 values with no
-quantization, and persists them in the mouse's onboard flash.
+Unifying receiver.
+
+By enumerating the device's feature table, we can locate the AdjustableDPI feature (`0x2201`).
+It accepts arbitrary `u16` values without validation, which allows encoding 2 bytes of data into the DPI value.
+
+However:
+
+- Writing DPI only affects the active DPI
+- The device also maintains a fallback/default DPI
+- On power cycles, the fallback value is restored
+
+So while you can store arbitrary data in the DPI register, it does not persist across power cycles.
 
 Tested on macOS. Long HID++ reports are blocked by IOHIDManager so storage
 is limited to one u16 (2 bytes) via short reports only.
